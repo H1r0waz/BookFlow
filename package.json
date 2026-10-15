@@ -11,14 +11,15 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate deploy",
+    "db:migrate": "node scripts/migrate.mjs",
     "db:seed": "tsx prisma/seed.ts",
     "db:start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/database.ps1",
     "db:stop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/database.ps1 -Stop",
     "start": "node dist-server/index.js",
     "verify:start": "node scripts/verify-start.mjs",
     "screenshots": "tsx scripts/capture-screenshots.ts",
-    "verify:repository": "node scripts/verify-repository.mjs"
+    "verify:repository": "node scripts/verify-repository.mjs",
+    "verify:production": "node scripts/verify-production.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.0",

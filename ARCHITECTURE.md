@@ -26,7 +26,15 @@ UTC timestamps use timestamptz. Luxon converts appointment times into IANA busin
 
 Passwords use bcrypt with cost 12. Random session and reset tokens are stored as SHA-256 hashes; raw sessions are HTTP-only, SameSite=Lax cookies and Secure in production. Seven-day session expiry is enforced on the server. Password reset tokens expire after one hour, are consumed transactionally, and revoke all sessions. Mutating requests require an exact allowed Origin; authenticated mutations additionally require the session's CSRF token. Helmet and sensitive-endpoint rate limiting are enabled. Payload size and Zod validation bound API input. Unexpected errors expose no database details or sensitive tokens.
 
-The application has one owner permission level. Public signup creates a separate tenant; no user invitation or role hierarchy is implemented. A signed-in business owner can manage all business resources.
+The application has one owner permission level. Public signup creates a separate tenant; no user invitation or role hierarchy is implemented. A signed-in business owner can manage all business resources. The public portfolio demo must contain fictional inputs only.
+
+## Deployment preparation
+
+One Render service can serve the built client and API from a single HTTPS origin. The client uses relative /api, preserving host-only SameSite=Lax cookies and avoiding cross-site CORS. server/config.ts validates exact origins, production TLS URL requirements, dynamic PORT, HOST and explicitly bounded proxy trust. Render uses one proxy hop; direct development trusts none. The managed database is independent Neon PostgreSQL with a restricted runtime role and separate direct migration role connection. The migration wrapper consumes DIRECT_DATABASE_URL only for the explicit migration process.
+
+PASSWORD_RESET_MODE defaults to local in development and disabled in production. Public demo forgot/reset handlers return 503 before creating reset tokens or contacting email services. Local recovery is forbidden in production. SMTP requires explicit mode and operator configuration; none has been activated.
+
+The explicit seed creates each synthetic tenant in a transaction. Repeating a known demo seed preserves data. Matching an unrelated slug or account is rejected, preventing a public demo login from being injected into an existing business. Seed and migration are never startup actions. No public deployment is claimed until real browser/cloud verification.
 
 ## Operational limits
 

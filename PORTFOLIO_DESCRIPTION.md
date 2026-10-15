@@ -6,7 +6,7 @@ BookFlow es una aplicación full-stack de reservas y gestión de clientes para p
 
 El backend utiliza Express, Prisma y PostgreSQL. La prevención de solapamientos combina transacciones, bloqueos por miembro del personal y una restricción de exclusión en la base de datos. Cada negocio accede a sus propios datos mediante sesiones y operaciones delimitadas por tenant.
 
-Proyecto de portafolio verificado localmente: **33 pruebas aprobadas**, lint, TypeScript, builds y validación de Prisma. Incluye documentación técnica, datos sintéticos y seis capturas. No está desplegado. SMTP real y HTTPS productivo siguen pendientes. Cuatro alertas altas de dependencias permanecen documentadas; no se presenta como producto certificado ni listo para producción.
+Proyecto personal de demostración verificado localmente: **45 pruebas aprobadas**, lint, TypeScript, builds y validación de Prisma. Incluye documentación técnica, datos sintéticos y seis capturas. La preparación para Render + Neon está hecha; no está desplegado ni tiene URL pública. No es trabajo realizado para un cliente. SMTP real y HTTPS productivo siguen pendientes; la recuperación está deshabilitada en modo demo público. Cuatro alertas altas de dependencias permanecen documentadas.
 
 ## English
 
@@ -14,7 +14,7 @@ BookFlow is a full-stack appointment and customer management application for sma
 
 The Express/Prisma/PostgreSQL backend combines transactions, staff-row locks and a database exclusion constraint to prevent overlapping appointments. Session-based tenant scoping keeps business data separate.
 
-Locally verified portfolio release: **33 passing automated tests**, lint, TypeScript, client/server builds and Prisma validation. Includes technical documentation, synthetic demo data and six screenshots. Not deployed. Real SMTP and production HTTPS remain unverified. Four high dependency alerts are documented; this is not a security certification or a claim of production readiness.
+Personal demonstration project with **45 passing automated tests**, lint, TypeScript, client/server builds and Prisma validation locally. Includes technical documentation, synthetic data and six screenshots. Render + Neon deployment preparation exists, but no deployment or public URL has been verified. This is not client work. Real SMTP and production HTTPS remain unverified; recovery is disabled in public-demo mode. Four high dependency alerts are documented.
 
 ## Technology actually used
 

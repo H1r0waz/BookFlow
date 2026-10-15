@@ -32,3 +32,7 @@ The mobile logout revokes the server session and returns to sign-in. Historical 
 `.env`, `.env.*` except the example, `.local`, node_modules, logs, database files, certificates/private keys, builds and test outputs are ignored. Only synthetic fixture accounts and public demo passwords belong in source. The real local database password must never be copied into documentation or Git.
 
 The local PostgreSQL role remains an isolated localhost development superuser. Use a separate migration role and a restricted runtime role for hosting. RLS is not implemented; isolation relies on the API and database relationships. Rate limits are process-local. Public customer identity is not email-verified. HTTPS proxy behavior, production Secure cookies and real SMTP delivery remain unverified.
+
+## Public demo preparation
+
+PASSWORD_RESET_MODE=disabled in production rejects forgot/reset before creating tokens, writing outbox files or contacting Nodemailer. Enabling SMTP requires explicit configuration and authorization. Local outbox mode is rejected by production startup. The compiled production-mode smoke verifies cookie flags and same-origin/CSRF behavior using loopback and simulated proxy headers, not actual HTTPS. TRUST_PROXY_HOPS is limited to 0 or 1 and must match the host. Seed operations now reject unrelated existing tenants and never overwrite accounts/records on repeat. All four npm audit alerts remain; none is silently suppressed. External resource creation and public TLS verification are pending.

@@ -32,7 +32,7 @@ The server derives the business from the session. Protected queries are scoped t
 
 ## Testing and verification
 
-33 automated tests: 17 PostgreSQL API, 8 timezone/scheduling, 3 React UI and 5 Chromium journeys. Tests exercise tenant mutations, overlapping/adjacent bookings, four simultaneous identical requests, idempotency, password reset expiry/single use, historical editing, independent audit actions, public booking persistence and mobile logout. This is scenario coverage, not a measured line-coverage percentage or load benchmark.
+45 automated tests: 17 PostgreSQL API, 8 timezone/scheduling, 3 React UI, 10 deployment configuration, 2 safe seed and 5 Chromium journeys. Tests exercise tenant mutations, overlapping/adjacent bookings, four simultaneous identical requests, idempotency, password reset expiry/single use, historical editing, independent audit actions, public booking persistence and mobile logout. This is scenario coverage, not a measured line-coverage percentage or load benchmark.
 
 TypeScript, ESLint, frontend/backend builds, generated Prisma client, schema validation and applied migration status pass. The corrected npm start path and compiled backend health are verified. Six screenshots demonstrate desktop and mobile states with synthetic data.
 

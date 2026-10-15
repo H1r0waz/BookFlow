@@ -1,0 +1,28 @@
+# Create only after approval and checking the workspace has no billable overages.
+services:
+  - type: web
+    name: bookflow-demo
+    runtime: node
+    plan: free
+    region: virginia
+    buildCommand: npm ci --include=dev && npm run db:generate && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_VERSION
+        value: 24.14.1
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: APP_ORIGIN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: PASSWORD_RESET_MODE
+        value: disabled
+      - key: TRUST_PROXY_HOPS
+        value: "1"
+# No database resource: use an independently approved Neon Free project.
+# Migrations and seed are explicit operations, never startup commands.

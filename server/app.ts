@@ -14,9 +14,11 @@ import { z } from "zod";
 import { Prisma } from "@prisma/client";
 import { db } from "./db.js";
 import { HttpError, validHours } from "./scheduling.js";
+import { readConfig } from "./config.js";
 
-const production = process.env.NODE_ENV === "production";
-const origin = process.env.APP_ORIGIN || "http://127.0.0.1:5173";
+const config = readConfig();
+const production = config.production;
+const origin = config.origin;
 const secret = () => randomBytes(32).toString("hex");
 const hash = (s: string) => createHash("sha256").update(s).digest("hex");
 const cookie = {
@@ -82,6 +84,7 @@ const context = (r: Request) => {
 const param = (r: Request, k: string) => String(r.params[k]);
 export const app = express();
 app.disable("x-powered-by");
+app.set("trust proxy", config.proxyHops || false);
 app.use(helmet());
 app.use(express.json({ limit: "64kb" }));
 app.use(cookieParser());
@@ -162,6 +165,11 @@ app.post("/api/auth/login", async (req, res) => {
   res.json({ csrf: await session(user.id, res) });
 });
 app.post("/api/auth/forgot", async (req, res) => {
+  if (config.recovery === "disabled")
+    throw new HttpError(
+      503,
+      "Password recovery is disabled in this public demo. Use the demo account or register with fictional data.",
+    );
   const data = z.object({ email }).parse(req.body),
     user = await db.user.findUnique({ where: { email: data.email } });
   if (user) {
@@ -174,14 +182,14 @@ app.post("/api/auth/forgot", async (req, res) => {
       },
     });
     const link = `${origin}/reset?token=${token}`;
-    if (process.env.SMTP_URL)
+    if (config.recovery === "smtp")
       await nodemailer.createTransport(process.env.SMTP_URL).sendMail({
         from: process.env.MAIL_FROM,
         to: user.email,
         subject: "Reset your BookFlow password",
         text: `Reset your password within one hour: ${link}`,
       });
-    else if (!production) {
+    else if (config.recovery === "local") {
       await mkdir(".local/outbox", { recursive: true });
       await writeFile(
         `.local/outbox/${Date.now()}.txt`,
@@ -193,6 +201,11 @@ app.post("/api/auth/forgot", async (req, res) => {
   res.json({ message: "If this account exists, a reset link has been sent." });
 });
 app.post("/api/auth/reset", async (req, res) => {
+  if (config.recovery === "disabled")
+    throw new HttpError(
+      503,
+      "Password recovery is disabled in this public demo.",
+    );
   const data = z
     .object({ token: z.string().length(64), password })
     .parse(req.body);

@@ -310,7 +310,10 @@ export function Auth() {
           <div className="demo-note">
             <strong>Explore the demo</strong>
             <p>demo@bookflow.example · BookFlowDemo!2026</p>
-            <small>Fictional business and customers.</small>
+            <small>
+              Personal portfolio demo. Use fictional data only. Password
+              recovery on the public demo is disabled.
+            </small>
           </div>
         </div>
       </section>
@@ -1608,7 +1611,7 @@ function PublicBooking() {
         <a href="/">
           <Logo />
         </a>
-        <span>Good things begin with a booking.</span>
+        <span>Portfolio demo · Use fictional data only.</span>
       </header>
       {data.isPending ? (
         <div className="loading">Opening booking page…</div>

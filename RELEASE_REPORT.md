@@ -17,7 +17,9 @@ Date: October 15, 2026. Status: **Portfolio ready for local presentation; not a 
 | Scheduling/timezone/DST | 8 tests passed |
 | React Testing Library | 3 tests passed |
 | Playwright Chromium | 5 journeys passed |
-| Total automated tests | 33 passed; 0 failed |
+| Deployment configuration | 10 tests passed |
+| Safe demo seeding | 2 tests passed |
+| Total automated tests | 45 passed; 0 failed |
 | TypeScript / ESLint | Passed |
 | Vite frontend / TypeScript backend builds | Passed |
 | npm start / compiled backend health | Passed locally |
@@ -44,3 +46,7 @@ Local Git repository on main; no remote configured. Public demo/test passwords a
 No deployment performed and no real SMTP configured. Production Secure cookies, TLS/reverse proxy, hosted PostgreSQL, backup/restore and real email delivery remain unverified. The development database role is a local superuser and must not be used as a hosted runtime role. RLS/granular roles, pagination, distributed rate limiting, currency conversion/history and DST offset selection remain out of scope. Audit records classify actions but do not store before/after snapshots.
 
 The release is appropriate for a truthful local portfolio walkthrough and source review. Hosting requires a separate authorized release step and the DEPLOYMENT.md checklist.
+
+## Deployment preparation follow-up
+
+No cloud resource or remote has been created. The new local configuration targets Render Free (one frontend/API origin) and Neon Free. PORT/HOST, exact production HTTPS origin, explicit single-proxy trust, production-mode disabled recovery and separate migration URL handling are prepared. The transactional seed creates two synthetic businesses explicitly and preserves existing data. Production-mode loopback smoke passes, including cookie flags and Origin/CSRF; this is not verification of actual HTTPS. See DEPLOYMENT_AUDIT.md for provider limits, account/payment checks and required authorization. No public URL or deployed commit is claimed.

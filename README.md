@@ -2,7 +2,7 @@
 
 A responsive appointment and customer management workspace for small service businesses. English product interface; fictional demo data.
 
-**Portfolio release:** locally verified, not deployed. 33 automated tests pass. Four high dependency alerts remain documented in [SECURITY_NOTES.md](SECURITY_NOTES.md); SMTP/HTTPS production behavior is not verified. See [RELEASE_REPORT.md](RELEASE_REPORT.md), [CASE_STUDY.md](CASE_STUDY.md), and [bilingual portfolio copy](PORTFOLIO_DESCRIPTION.md).
+**Portfolio demo:** locally verified, not deployed. Deployment preparation targets one Render Free frontend/API origin and a separate Neon Free database; creation is pending authorization. See [deployment audit](DEPLOYMENT_AUDIT.md). Four high dependency alerts remain documented in [SECURITY_NOTES.md](SECURITY_NOTES.md); real SMTP/HTTPS behavior is not verified. See [RELEASE_REPORT.md](RELEASE_REPORT.md), [CASE_STUDY.md](CASE_STUDY.md), and [bilingual portfolio copy](PORTFOLIO_DESCRIPTION.md).
 
 ![BookFlow dashboard](docs/screenshots/dashboard.png)
 
@@ -41,7 +41,7 @@ Demo credentials are public fixtures; never seed this account into a real custom
 
 ## Password recovery
 
-Without SMTP in development, reset messages are written to `.local/outbox/`. Open the newest file and follow its link. These files contain sensitive development reset links and are ignored by Git. Production startup requires SMTP_URL, MAIL_FROM and an HTTPS APP_ORIGIN.
+With PASSWORD_RESET_MODE=local in development, reset messages are written to `.local/outbox/`. These sensitive links are ignored by Git. The public demo uses PASSWORD_RESET_MODE=disabled: recovery returns 503 without writing tokens or sending mail. Production never allows local outbox mode. SMTP mode requires explicit SMTP_URL/MAIL_FROM and separate authorization; no real SMTP is configured.
 
 ## Verification
 
@@ -51,6 +51,7 @@ npm run lint
 npm test
 npm run build
 npm run verify:start
+npm run verify:production
 npx playwright install chromium
 npm run test:e2e
 ```
