@@ -1,6 +1,6 @@
 # BookFlow portfolio release report
 
-Date: October 15, 2026. Status: **Portfolio ready for local presentation; not a deployed public demo.**
+Date: October 15, 2026. Status: **Public portfolio demo ready; operational production readiness is not claimed.**
 
 ## Corrected
 
@@ -43,10 +43,16 @@ Local Git repository on main; no remote configured. Public demo/test passwords a
 
 ## Limitations / deployment
 
-No deployment performed and no real SMTP configured. Production Secure cookies, TLS/reverse proxy, hosted PostgreSQL, backup/restore and real email delivery remain unverified. The development database role is a local superuser and must not be used as a hosted runtime role. RLS/granular roles, pagination, distributed rate limiting, currency conversion/history and DST offset selection remain out of scope. Audit records classify actions but do not store before/after snapshots.
+Public Render/Neon deployment, Secure cookies, TLS/proxy and hosted PostgreSQL were verified on October 15, 2026. Real SMTP remains disabled; backup/restore and actual email delivery remain unverified. Hosting uses a restricted DML role, separate from the local development superuser. RLS/granular business-user roles, pagination, distributed rate limiting, currency conversion/history and DST offset selection remain out of scope. Audit records classify actions but do not store before/after snapshots.
 
-The release is appropriate for a truthful local portfolio walkthrough and source review. Hosting requires a separate authorized release step and the DEPLOYMENT.md checklist.
+The release is appropriate for a public personal portfolio demonstration and source review, with the operational limitations documented in PUBLIC_DEPLOYMENT_REPORT.md.
 
 ## Deployment preparation follow-up
 
-No cloud resource or remote has been created. The new local configuration targets Render Free (one frontend/API origin) and Neon Free. PORT/HOST, exact production HTTPS origin, explicit single-proxy trust, production-mode disabled recovery and separate migration URL handling are prepared. The transactional seed creates two synthetic businesses explicitly and preserves existing data. Production-mode loopback smoke passes, including cookie flags and Origin/CSRF; this is not verification of actual HTTPS. See DEPLOYMENT_AUDIT.md for provider limits, account/payment checks and required authorization. No public URL or deployed commit is claimed.
+The user authorized a private GitHub remote, Render Free and Neon Free. They are now provisioned. PORT/HOST, exact production HTTPS origin, explicit single-proxy trust, disabled recovery and separate migration credentials are configured. The transactional seed created two synthetic businesses and preserved both on repeat. Local production-mode smoke and separate real HTTPS/API/browser checks passed. See DEPLOYMENT_AUDIT.md and PUBLIC_DEPLOYMENT_REPORT.md for provider limits, billing observations, actual URL and deployed application commit.
+
+## Public deployment verification — October 15, 2026
+
+Live demo: https://bookflow-demo-c0g0.onrender.com. Application artifact: 30062ca32e497737f8da683d42fa9897a8629eee. Private GitHub repository; Render Free + Neon Free. Both database migrations, explicit fictional two-tenant seed and non-destructive seed retry passed. Separate restricted runtime role cannot create schema objects or modify migration history. Healthcheck queries the real database. Real HTTPS cookie/Origin/CSRF/logout checks passed, plus 36 HTTP/API checks and 17 native browser checks. The local suite was rerun: 40 Vitest + 5 Chromium tests, lint, typecheck, frontend/backend builds, compiled startup and production-mode smoke passed. npm audit remains 4 high, 0 critical/moderate/low; it exits 1 and is not reported as a clean audit. No paid resources, card, custom domain or SMTP were added.
+
+See PUBLIC_DEPLOYMENT_REPORT.md for precise scope, free-tier limits and remaining operational limitations. This release is a public portfolio demo, not verified operational production readiness.

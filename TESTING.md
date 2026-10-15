@@ -50,11 +50,20 @@ TypeScript, ESLint, Vite frontend build, TypeScript backend build, compiled back
 
 ## Security checks and limitations
 
-Deployment preparation adds configuration validation, safe demo-seed retry/collision checks, and a compiled production-mode smoke test. The smoke checks shared SPA/API origin, Secure/HttpOnly/SameSite cookies, session/logout, Origin/CSRF rejection and disabled recovery without SMTP. It uses loopback HTTP with simulated proxy metadata: real cloud HTTPS, external PostgreSQL, billing settings and public-browser flows are still unverified. render.yaml passes validation against the official draft 2020-12 JSON schema; this is not an applied Render Blueprint.
+Deployment preparation adds configuration validation, safe demo-seed retry/collision checks, and a compiled production-mode smoke test. The smoke checks shared SPA/API origin, Secure/HttpOnly/SameSite cookies, session/logout, Origin/CSRF rejection and disabled recovery without SMTP. It uses loopback HTTP with simulated proxy metadata: the local smoke itself does not verify cloud HTTPS. Separately, the real Render HTTPS deployment and Neon database were verified on October 15, 2026: 36 API checks and 17 browser checks passed; account billing showed Free/Hobby with no Render card and $0 accrued charges. render.yaml passes validation against the official draft 2020-12 JSON schema; this is not an applied Render Blueprint.
 
 npm audit full and omit=dev return exit code 1: four high entries, zero critical/moderate/low. See SECURITY_NOTES.md for roots, actual inputs, mitigations and deferred major upgrades. Those alerts are not ignored or represented as passing security checks.
 
-No line-coverage percentage, production load benchmark, multi-replica concurrency, external SMTP delivery, production TLS/cookies or hosted backup/restore is claimed. Autumn offset selection remains a documented UX limitation. The suite protects representative paths; it does not prove every possible tenant/input permutation.
+No line-coverage percentage, production load benchmark, multi-replica concurrency, external SMTP delivery or hosted backup/restore is claimed. Autumn offset selection remains a documented UX limitation. The suite protects representative paths; it does not prove every possible tenant/input permutation.
+
+## Public deployment verification — October 15, 2026
+
+Origin: https://bookflow-demo-c0g0.onrender.com. Application artifact: 30062ca32e497737f8da683d42fa9897a8629eee.
+
+- 36 HTTP/API checks passed: health with database, registration, two tenant sessions, invalid password, secure cookies, rate-limit headers, unauthenticated access, Origin/CSRF rejection, customer/service/staff creation and editing, availability, tenant read/write/booking isolation, one winner for competing reservations, replay/payload mismatch, notes/audit classification, rescheduling, idempotent cancellation, public profile privacy, public booking/replay/owner visibility, disabled recovery/reset, SPA route refresh and logout revocation.
+- 17 native browser checks passed: login, dashboard, day/week/month calendars, customer/service/team views, availability editor, appointment creation/edit/cancel, mobile navigation without horizontal overflow at 390×844, mobile logout, logout persistence after refresh, public booking page and confirmed public reservation on mobile. These are manual browser checks, not additional Playwright test cases.
+- Verification used fictional records only. The temporary API tenant and explicitly identified browser records were removed afterward; the two seeded demo businesses remain.
+- Rate-limit headers and configured limits were verified; no production traffic/load benchmark or multi-replica limiting is claimed. Public registration was tested through HTTP; its browser form is not an additional claimed browser test.
 
 ## Screenshots
 

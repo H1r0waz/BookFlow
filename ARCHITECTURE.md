@@ -34,7 +34,7 @@ One Render service can serve the built client and API from a single HTTPS origin
 
 PASSWORD_RESET_MODE defaults to local in development and disabled in production. Public demo forgot/reset handlers return 503 before creating reset tokens or contacting email services. Local recovery is forbidden in production. SMTP requires explicit mode and operator configuration; none has been activated.
 
-The explicit seed creates each synthetic tenant in a transaction. Repeating a known demo seed preserves data. Matching an unrelated slug or account is rejected, preventing a public demo login from being injected into an existing business. Seed and migration are never startup actions. No public deployment is claimed until real browser/cloud verification.
+The explicit seed creates each synthetic tenant in a transaction. Repeating a known demo seed preserves data. Matching an unrelated slug or account is rejected, preventing a public demo login from being injected into an existing business. Seed and migration are never startup actions. The Render Free/Neon Free deployment was verified over real HTTPS on October 15, 2026: 36 public API checks and 17 browser checks passed. See PUBLIC_DEPLOYMENT_REPORT.md for scope and operational limits.
 
 ## Operational limits
 

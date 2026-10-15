@@ -2,7 +2,7 @@
 
 A responsive appointment and customer management workspace for small service businesses. English product interface; fictional demo data.
 
-**Portfolio demo:** locally verified, not deployed. Deployment preparation targets one Render Free frontend/API origin and a separate Neon Free database; creation is pending authorization. See [deployment audit](DEPLOYMENT_AUDIT.md). Four high dependency alerts remain documented in [SECURITY_NOTES.md](SECURITY_NOTES.md); real SMTP/HTTPS behavior is not verified. See [RELEASE_REPORT.md](RELEASE_REPORT.md), [CASE_STUDY.md](CASE_STUDY.md), and [bilingual portfolio copy](PORTFOLIO_DESCRIPTION.md).
+**Live portfolio demo:** [Open BookFlow](https://bookflow-demo-c0g0.onrender.com) · [Public booking](https://bookflow-demo-c0g0.onrender.com/book/willow-studio). Personal demonstration project with fictional data, hosted on Render Free + Neon Free. Verified over real HTTPS: 45 local automated tests, 36 public API checks and 17 browser checks. Password recovery/SMTP are disabled; four high dependency alerts remain documented. See [PUBLIC_DEPLOYMENT_REPORT.md](PUBLIC_DEPLOYMENT_REPORT.md), [SECURITY_NOTES.md](SECURITY_NOTES.md), [CASE_STUDY.md](CASE_STUDY.md), and [bilingual portfolio copy](PORTFOLIO_DESCRIPTION.md).
 
 ![BookFlow dashboard](docs/screenshots/dashboard.png)
 

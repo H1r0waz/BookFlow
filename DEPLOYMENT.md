@@ -1,6 +1,6 @@
 # Deployment
 
-No production infrastructure has been created or deployed. **Recommended pending approval:** one Render Free service serving React/Express on the same HTTPS origin and a dedicated Neon Free PostgreSQL project. See DEPLOYMENT_AUDIT.md for alternatives, current free limits, potential overage risks and the authorization boundary. render.yaml is validated against Render's official JSON schema; it has not been applied to an account.
+The authorized public portfolio demo is live at https://bookflow-demo-c0g0.onrender.com: one Render Free service serving React/Express and a dedicated Neon Free PostgreSQL project. See PUBLIC_DEPLOYMENT_REPORT.md for verified scope and DEPLOYMENT_AUDIT.md for provider selection and limits. render.yaml was schema-validated and used as configuration reference; the service was created directly rather than by applying a Blueprint.
 
 The local portfolio release passes its automated checks and compiled startup smoke test. Four high npm audit entries remain; review SECURITY_NOTES.md before enabling a public service or SMTP. Local verification is not approval to deploy.
 
@@ -37,7 +37,7 @@ Multi-replica deployments require shared rate-limit storage and a correct, narro
 
 For all six portfolio views, run `npm run screenshots`. Reviewed captures are kept under docs/screenshots; regenerate them only using the synthetic local demo.
 
-## Verified artifact and pending hosted checks
+## Verified artifact and hosted configuration
 
 The backend is emitted at dist-server/index.js and `npm start` invokes it. With NODE_ENV=development, startup serves the API and Vite serves the client separately. The development origin must remain http://127.0.0.1:5173; using localhost instead is a different origin and mutations will be rejected.
 
@@ -56,7 +56,7 @@ The frontend's relative `/api` base is the environment-independent equivalent of
 
 `npm run verify:production` checks the built SPA and production-mode cookie/session/Origin/CSRF/recovery behavior locally with a simulated HTTPS proxy header. It does not prove real TLS, cloud connectivity or provider billing eligibility.
 
-Current progress (2026-10-15): private GitHub origin configured at https://github.com/H1r0waz/BookFlow; push awaits GitHub device verification. Dedicated Neon Free database in Virginia has both migrations applied and two fictional businesses seeded. Prisma validate and migrate status passed against that database. Runtime role is restricted to application DML and cannot alter schema or migration history. Render Hobby billing has no card and shows $0; no Render application service has been created yet. Public verification remains pending.
+Current progress (2026-10-15): private GitHub origin https://github.com/H1r0waz/BookFlow is pushed. Render Free service bookflow-demo is live at https://bookflow-demo-c0g0.onrender.com; application commit 30062ca32e497737f8da683d42fa9897a8629eee. Healthcheck /api/health returns 200 with a database query. APP_ORIGIN is the exact assigned HTTPS origin; production uses the restricted pooled Neon role with connection_limit=3, disabled recovery and TRUST_PROXY_HOPS=1. Both migrations, explicit fictional seed/retry, Prisma validate and migrate status passed. 36 public API checks and 17 native browser checks passed. Auto-deploy and previews are off. Render billing showed no card and $0; Neon remains Free. See PUBLIC_DEPLOYMENT_REPORT.md.
 
 On this local network, IPv6 PostgreSQL connections failed while IPv4 succeeded. Explicit migration/seed processes used a resolved IPv4 address with Neon's endpoint routing option and required TLS; this did not change global DNS or application code. Hosted runtime must retain the pooled provider hostname.
 

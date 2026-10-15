@@ -1,6 +1,6 @@
 # Public deployment audit and decision
 
-Reviewed October 15, 2026. **No cloud resource or Git remote created. No public URL exists yet.** The previous locally verified release is bd51376; the working tree now contains reviewed deployment preparation.
+Reviewed October 15, 2026. **Public portfolio demo verified:** https://bookflow-demo-c0g0.onrender.com. Private GitHub repository, Render Free service and separate Neon Free database created with user authorization. Both migrations and explicit fictional demo seed completed; 36 public API checks and 17 native browser checks passed. See PUBLIC_DEPLOYMENT_REPORT.md for the deployed application commit and remaining limitations.
 
 ## Recommendation
 
@@ -25,9 +25,9 @@ Sources: https://render.com/docs/free, https://render.com/docs/blueprint-spec, h
 
 ## Authorized resources and current progress
 
-1. Private GitHub repository https://github.com/H1r0waz/BookFlow created. Local origin configured; source push awaits GitHub device verification.
+1. Private GitHub repository https://github.com/H1r0waz/BookFlow created. Local origin configured and source pushed. Git author/committer emails were changed to the GitHub noreply address after privacy protection rejected the first push; protection stayed enabled.
 2. Neon Free project bookflow-demo created in AWS Virginia, separate from local development. Both Prisma migrations and the explicit fictional two-business seed completed. A restricted DML runtime role is separate from the migration owner; it cannot create schema objects or modify migration records.
-3. Render workspace Bruno's workspace confirmed by the user. Billing shows Hobby, no card on file and $0 accrued charges. Render service creation is pending source push; the proposed name is bookflow-demo. No application URL is live yet.
+3. Render workspace Bruno's workspace confirmed by the user. Billing shows Hobby, no card on file and $0 accrued charges. Render Free service bookflow-demo is live at https://bookflow-demo-c0g0.onrender.com, with /api/health configured and auto-deploy off.
 
 ## Required environment / inputs
 
@@ -51,6 +51,6 @@ npm audit remains 4 high / 0 critical / 0 moderate: Nodemailer plus the propagat
 
 Cloud database migration and seed completed on 2026-10-15. Prisma migrate status reports both migrations applied; Prisma validate passes. The local network cannot reach the provider over IPv6, so the migration process used a resolved IPv4 address with Neon's endpoint routing option and required TLS. This was process-local: no global DNS/hosts changes and no application transport changes. Hosted runtime keeps the pooled provider hostname.
 
-Application deployment and public-browser tests remain pending GitHub device verification/source push. Native public-browser tests must follow the actual deployment, including two distinct tenants, full CRUD/booking/calendar/mobile paths, concurrency, idempotency, TLS, cookie persistence and direct route refresh. Local simulated-proxy checks do not count as public HTTPS verification.
+Application deployment completed for commit 30062ca32e497737f8da683d42fa9897a8629eee. 36 checks against the real HTTPS API and 17 native browser checks passed; see PUBLIC_DEPLOYMENT_REPORT.md for exact scope and limitations. Local simulated-proxy checks are reported separately.
 
-A final PUBLIC_DEPLOYMENT_REPORT.md must contain actual URLs and a deployed commit only after successful provider and browser verification; placeholders must never be presented as live URLs.
+PUBLIC_DEPLOYMENT_REPORT.md records the actual URL, deployed application commit, provider configuration, verification scope and remaining limitations.
