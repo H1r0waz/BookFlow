@@ -45,12 +45,16 @@ The frontend calls relative /api on the same public origin: this is the API-base
 
 ## Security decision
 
-npm audit remains 4 high / 0 critical / 0 moderate: Nodemailer plus the propagated Prisma/deepmerge tooling chain. No force fix or destructive major upgrade. PASSWORD_RESET_MODE=disabled prevents both password reset handlers before token creation/SMTP in the public demo. SECURITY_NOTES.md retains details. This reduces public exposure; it is not proof that the dependency tree is vulnerability-free.
+The initial release documented four high entries from Nodemailer and Prisma's deepmerge tooling chain. The reviewed security update now resolves them with Nodemailer 10.1.1 and a scoped deepmerge-ts 8.0.2 override, retaining Prisma 6.19.3. Full and production npm audit report zero vulnerabilities, and Render's clean install confirms this. No force fix was used. PASSWORD_RESET_MODE=disabled still rejects recovery before token creation or SMTP. SECURITY_NOTES.md documents compatibility and remaining limits; a clean advisory scan is not a security certification.
 
 ## Approval boundary and future verification
 
 Cloud database migration and seed completed on 2026-10-15. Prisma migrate status reports both migrations applied; Prisma validate passes. The local network cannot reach the provider over IPv6, so the migration process used a resolved IPv4 address with Neon's endpoint routing option and required TLS. This was process-local: no global DNS/hosts changes and no application transport changes. Hosted runtime keeps the pooled provider hostname.
 
-Application deployment completed for commit 30062ca32e497737f8da683d42fa9897a8629eee. 36 checks against the real HTTPS API and 17 native browser checks passed; see PUBLIC_DEPLOYMENT_REPORT.md for exact scope and limitations. Local simulated-proxy checks are reported separately.
+The current security-update deployment completed for commit 31fe3663c91a486d82ffa57f8e019c5c11ae7f45. 36 checks against the real HTTPS API and 17 native browser checks passed; see PUBLIC_DEPLOYMENT_REPORT.md for exact scope and limitations. Local simulated-proxy checks are reported separately.
 
 PUBLIC_DEPLOYMENT_REPORT.md records the actual URL, deployed application commit, provider configuration, verification scope and remaining limitations.
+
+## Security update deployment
+
+User-authorized commit 31fe3663c91a486d82ffa57f8e019c5c11ae7f45 is live via dep-db8ign59fdbs73ee1ojg. Render remains Free with auto-deploy off and SMTP/recovery disabled. Clean installation logs report 0 vulnerabilities. Post-deployment verification: 36 public API checks and 8 native browser smoke checks passed. The initial release had 17 broader UI checks; those are not claimed as rerun for this update.

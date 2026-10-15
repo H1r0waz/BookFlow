@@ -19,8 +19,8 @@ Verified: October 15, 2026 (America/Buenos_Aires).
 ## Git
 
 - Repository: https://github.com/H1r0waz/BookFlow — private.
-- Deployed application commit: 30062ca32e497737f8da683d42fa9897a8629eee.
-- Verified live deploy: dep-db8h3pmjh76s739hued0; service srv-db8h3mrrjlhs7385csv0.
+- Deployed application commit: 31fe3663c91a486d82ffa57f8e019c5c11ae7f45.
+- Verified live deploy: dep-db8ign59fdbs73ee1ojg; service srv-db8h3mrrjlhs7385csv0.
 - Release documentation is committed afterward on main; runtime application files are unchanged. GitHub noreply email preserves account email privacy.
 - Secrets/runtime data are ignored. Repository safety check passed for 55 tracked files before final documentation; an additional cloud-credential scan checked 71 historical blobs and found no actual cloud URLs/passwords. Final Git status and remote alignment are verified after the documentation commit.
 
@@ -28,7 +28,7 @@ Verified: October 15, 2026 (America/Buenos_Aires).
 
 36 API checks passed: database health, registration, session persistence, invalid-password rejection, second-tenant login/logout, customer/service/staff creation and editing, availability/service assignment, tenant reads/writes/bookings, concurrent conflict prevention, idempotent retry/payload mismatch, notes audit classification, rescheduling, cancellation idempotency, public data privacy/booking/retry/owner visibility, disabled recovery/reset, direct SPA refresh, logout session revocation and security headers/checks.
 
-17 native browser checks passed: login, dashboard, weekly/daily/monthly calendars, customer/service/team views, availability editor, appointment create/edit/cancel, mobile navigation without horizontal overflow at 390×844, mobile logout, logged-out refresh persistence, public booking page and a confirmed public reservation on mobile. Public registration was verified through HTTP, not counted as a browser-form check. The explicitly identified test records were cleaned up afterward.
+The initial release passed 17 native browser checks: login, dashboard, weekly/daily/monthly calendars, customer/service/team views, availability editor, appointment create/edit/cancel, mobile navigation without horizontal overflow at 390×844, mobile logout, logged-out refresh persistence, public booking page and a confirmed public reservation on mobile. Public registration was verified through HTTP, not counted as a browser-form check. The explicitly identified test records were cleaned up afterward. After deploying the dependency remediation, the 36 public API checks were repeated successfully and 8 native browser smoke checks passed: login, dashboard data, calendar, customers, authenticated direct refresh, mobile navigation with visible logout, mobile logout and public booking page.
 
 ## Tests
 
@@ -40,9 +40,11 @@ Verified: October 15, 2026 (America/Buenos_Aires).
 | Deployment configuration | 10 | 0 |
 | Safe demo seed | 2 | 0 |
 | Playwright Chromium journeys | 5 | 0 |
-| Total local automated tests | 45 | 0 |
+| Dependency security/compatibility | 4 | 0 |
+| Total local automated tests | 49 | 0 |
 | Public HTTP/API checks (separate) | 36 | 0 |
-| Native browser checks (separate) | 17 | 0 |
+| Initial native browser checks (historical) | 17 | 0 |
+| Security-update native browser smoke | 8 | 0 |
 
 Lint, typecheck, frontend/backend builds, compiled npm start, production-mode local smoke, Prisma validate and remote migrate status passed. The 36/17 public checks are not added to the automated suite count. No line-coverage percentage or load benchmark is claimed.
 
@@ -55,7 +57,7 @@ Lint, typecheck, frontend/backend builds, compiled npm start, production-mode lo
 - Rate limiting: authentication 30 requests/15 minutes and public endpoints 90/minute; draft rate-limit headers observed publicly. Per-process, not distributed; no saturation/load test was performed on the public service.
 - Tenant isolation: isolated demo businesses plus a temporary verification business; foreign reads/mutations/bookings blocked. Database constraints and transactional locks retained.
 - Passwords: bcrypt; opaque session tokens hashed at rest. No real SMTP or local-outbox mode in production.
-- npm audit final: **4 high, 0 critical, 0 moderate, 0 low**; exit code 1. Nodemailer and propagated deepmerge-ts → @prisma/config → prisma alerts remain. Public email/recovery handlers are disabled before token creation or mail use. Prisma tooling does not receive public merge input. No destructive major upgrades/force fixes were applied. See SECURITY_NOTES.md; this is not vulnerability-free software.
+- npm audit final: **0 vulnerabilities**, full and production audits exit 0. Nodemailer 10.1.1 and a scoped deepmerge-ts 8.0.2 override fix the former alerts, retaining Prisma/client 6.19.3. The major dependency changes were reviewed and tested; no force fix was used. Render clean-install logs also report zero advisories. SMTP/recovery remain disabled. See SECURITY_NOTES.md; a clean advisory scan is not a security certification.
 
 ## Database
 
@@ -68,7 +70,7 @@ Runtime uses a separate DML role with pooled hostname and connection_limit=3. Ve
 ## Limitations
 
 - SMTP/password recovery disabled publicly (503); actual email delivery not verified.
-- Four high dependency alerts remain documented.
+- No known matching npm audit alerts remain at verification time; advisory status can change.
 - Render Free: idle spin-down after 15 minutes, cold starts, shared 750 instance-hours/month and workspace bandwidth/build quotas, ephemeral disk, no paid scaling/SLA or interactive shell. Suspension is possible when free allowances are exhausted. At verification, the workspace UI showed 5 GB bandwidth and 500 pipeline minutes/month; quotas are provider-controlled and may change.
 - Neon Free: console displayed 100 compute hours and up to 1 GB/project; this new project's API reported a 512 MiB branch logical-size cap. Keep below that stricter cap. Compute can suspend; there is no paid availability guarantee.
 - Shared demo owner credentials allow visitors to modify fictional records. Registration is open and rate-limited; this is not suitable for private customer data.
@@ -81,4 +83,4 @@ Runtime uses a separate DML role with pooled hostname and connection_limit=3. Ve
 
 ## Summary for ChatGPT
 
-Public URL: https://bookflow-demo-c0g0.onrender.com. Personal demonstration project, not client work. Stack: React/Vite/TypeScript + Express/Prisma/PostgreSQL. Hosting: Render Free + Neon Free; private GitHub repository. Verified booking/edit/cancel, public booking, tenant isolation, concurrency/idempotency, HTTPS/cookies/Origin/CSRF and mobile logout. 45 local automated tests passed, plus 36 public API checks and 17 native browser checks; lint/typecheck/build/Prisma checks passed. SMTP/recovery disabled, 4 high audit alerts documented, free-tier cold starts/quotas and operational limits remain. Deployed application commit: 30062ca32e497737f8da683d42fa9897a8629eee.
+Public URL: https://bookflow-demo-c0g0.onrender.com. Personal demonstration project, not client work. Stack: React/Vite/TypeScript + Express/Prisma/PostgreSQL. Hosting: Render Free + Neon Free; private GitHub repository. Verified booking/edit/cancel, public booking, tenant isolation, concurrency/idempotency, HTTPS/cookies/Origin/CSRF and mobile logout. 49 local automated tests passed, plus 36 public API checks and 8 security-update browser smoke checks (17 broader browser checks covered the initial release); lint/typecheck/build/Prisma checks passed. SMTP/recovery disabled, 0 npm audit vulnerabilities, free-tier cold starts/quotas and operational limits remain. Deployed application commit: 31fe3663c91a486d82ffa57f8e019c5c11ae7f45.

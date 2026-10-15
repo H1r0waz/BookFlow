@@ -16,7 +16,7 @@ Primary references: [Nodemailer changelog](https://github.com/nodemailer/nodemai
 
 The updated local dependency graph reports **0 vulnerabilities**. Full and omit=dev audits must both pass before release. This means no known matching npm advisories at verification time; it is not a security certification.
 
-PUBLIC_DEPLOYMENT_REPORT.md records the earlier artifact 30062ca and its four documented alerts. These changes are a separate release candidate; the public service must not be described as patched until that candidate is deployed and checked. Real SMTP remains disabled, with no external provider activated.
+The user authorized deployment of 31fe3663c91a486d82ffa57f8e019c5c11ae7f45. Render deploy dep-db8ign59fdbs73ee1ojg is live and its clean installation log confirms 0 vulnerabilities. The corrected public artifact passed 36 API checks and 8 native browser smoke checks (login/dashboard/calendar/customers, direct authenticated route refresh, mobile navigation/logout and public booking). Real SMTP remains disabled, with no external provider activated. PUBLIC_DEPLOYMENT_REPORT.md records the current artifact and distinguishes initial broader browser coverage from this release smoke.
 
 ## Regression verification
 

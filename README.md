@@ -2,13 +2,13 @@
 
 A responsive appointment and customer management workspace for small service businesses. English product interface; fictional demo data.
 
-**Live portfolio demo:** [Open BookFlow](https://bookflow-demo-c0g0.onrender.com) · [Public booking](https://bookflow-demo-c0g0.onrender.com/book/willow-studio). Personal demonstration project with fictional data, hosted on Render Free + Neon Free. Verified over real HTTPS: 45 local automated tests, 36 public API checks and 17 browser checks. Password recovery/SMTP are disabled; four high dependency alerts remain documented. See [PUBLIC_DEPLOYMENT_REPORT.md](PUBLIC_DEPLOYMENT_REPORT.md), [SECURITY_NOTES.md](SECURITY_NOTES.md), [CASE_STUDY.md](CASE_STUDY.md), and [bilingual portfolio copy](PORTFOLIO_DESCRIPTION.md).
+**Live portfolio demo:** [Open BookFlow](https://bookflow-demo-c0g0.onrender.com) · [Public booking](https://bookflow-demo-c0g0.onrender.com/book/willow-studio). Personal demonstration project with fictional data, hosted on Render Free + Neon Free. Verified over real HTTPS: 49 local automated tests, 36 public API checks and 17 browser checks. Password recovery/SMTP are disabled; the dependency remediation has zero matching npm audit vulnerabilities, documented. See [PUBLIC_DEPLOYMENT_REPORT.md](PUBLIC_DEPLOYMENT_REPORT.md), [SECURITY_NOTES.md](SECURITY_NOTES.md), [CASE_STUDY.md](CASE_STUDY.md), and [bilingual portfolio copy](PORTFOLIO_DESCRIPTION.md).
 
 ![BookFlow dashboard](docs/screenshots/dashboard.png)
 
 ## Quick start (Windows PowerShell)
 
-**Security update candidate:** the local dependency remediation removes the four npm audit alerts with reviewed Nodemailer 10.1.1 and deepmerge-ts 8.0.2 updates. It retains Prisma 6 and adds four security/compatibility tests (49 total). The public deployment report describes the earlier artifact; publishing this candidate is a separate deployment step. See [SECURITY_NOTES.md](SECURITY_NOTES.md).
+**Security update deployed:** application commit 31fe3663c91a486d82ffa57f8e019c5c11ae7f45 is live on Render Free. Full and production npm audits report 0 vulnerabilities. Nodemailer 10.1.1 and scoped deepmerge-ts 8.0.2 retain Prisma 6; 49 local automated tests pass. The corrected public artifact passed 36 API checks and 8 browser smoke checks. SMTP remains disabled. See [SECURITY_NOTES.md](SECURITY_NOTES.md).
 
 Requirements: Node.js 22.12+ and PostgreSQL binaries (`initdb`, `pg_ctl`, `psql`, `createdb`) on PATH.
 

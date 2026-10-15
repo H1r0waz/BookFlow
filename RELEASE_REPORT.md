@@ -2,7 +2,7 @@
 
 Date: October 15, 2026. Status: **Public portfolio demo ready; operational production readiness is not claimed.**
 
-**Dependency remediation candidate (same date):** local full and omit=dev npm audits now report 0 vulnerabilities after reviewed Nodemailer 10.1.1 and scoped deepmerge-ts 8.0.2 updates. Prisma/client remain 6.19.3. Four added security/compatibility tests bring the local suite to 49. The public artifact and public checks below describe the previous release; the corrected candidate has not been redeployed. No real SMTP service was activated. SECURITY_NOTES.md documents the compatibility review and remaining operational limits.
+**Dependency remediation deployed (same date):** commit 31fe3663c91a486d82ffa57f8e019c5c11ae7f45, deploy dep-db8ign59fdbs73ee1ojg, is live. Full and production npm audits report 0 vulnerabilities; Render's clean install log also reports zero. Nodemailer 10.1.1 and scoped deepmerge-ts 8.0.2 retain Prisma/client 6.19.3. All 49 local automated tests passed before deployment; 36 public API checks and 8 browser smoke checks passed afterward. No real SMTP was activated. Older release results below are retained as history.
 
 ## Corrected
 
