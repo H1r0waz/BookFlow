@@ -43,7 +43,7 @@ The backend is emitted at dist-server/index.js and `npm start` invokes it. With 
 
 Production startup refuses missing/invalid HTTPS APP_ORIGIN, missing DATABASE_URL, invalid PORT/proxy settings or local-outbox recovery. SMTP is not required when PASSWORD_RESET_MODE=disabled. It is required only when smtp mode is explicitly enabled. Never enable real SMTP without authorization. Do not disable Secure cookies or CSRF checks to accommodate a host. Retain a separate migration role, use a restricted runtime role and re-run the hosted flow checklist. The Nodemailer/deepmerge alerts remain documented; the public demo disables email recovery.
 
-## Explicit free-tier deployment sequence (not executed)
+## Explicit free-tier deployment sequence
 
 1. Obtain approval for a private Git remote and confirm Render/Neon access and $0 controls. Do not apply the Blueprint if payment/overage settings allow charges.
 2. Create the dedicated Neon Free project only after account eligibility is confirmed. Use TLS connections, prefer a pooled runtime endpoint with a small connection_limit (for example 3), and a direct endpoint for migration operations. Verify btree_gist is available and use a separately restricted runtime role with schema/table/sequence DML privileges, not DDL. Default privileges must cover future migration-created tables. Do not use the local superuser or local data directory.
@@ -56,4 +56,8 @@ The frontend's relative `/api` base is the environment-independent equivalent of
 
 `npm run verify:production` checks the built SPA and production-mode cookie/session/Origin/CSRF/recovery behavior locally with a simulated HTTPS proxy header. It does not prove real TLS, cloud connectivity or provider billing eligibility.
 
-No Git remote was created. No secrets, database files or outbox messages belong in source archives. Public demo credentials must never be used for an installation containing real customer data.
+Current progress (2026-10-15): private GitHub origin configured at https://github.com/H1r0waz/BookFlow; push awaits GitHub device verification. Dedicated Neon Free database in Virginia has both migrations applied and two fictional businesses seeded. Prisma validate and migrate status passed against that database. Runtime role is restricted to application DML and cannot alter schema or migration history. Render Hobby billing has no card and shows $0; no Render application service has been created yet. Public verification remains pending.
+
+On this local network, IPv6 PostgreSQL connections failed while IPv4 succeeded. Explicit migration/seed processes used a resolved IPv4 address with Neon's endpoint routing option and required TLS; this did not change global DNS or application code. Hosted runtime must retain the pooled provider hostname.
+
+No secrets, database files or outbox messages belong in source archives. Public demo credentials must never be used for an installation containing real customer data.

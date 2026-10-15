@@ -23,11 +23,11 @@ Verified from official public documentation, not account eligibility:
 
 Sources: https://render.com/docs/free, https://render.com/docs/blueprint-spec, https://neon.com/pricing, https://vercel.com/docs/plans/hobby.
 
-## Concrete resources pending authorization
+## Authorized resources and current progress
 
-1. Private GitHub repository, proposed name BookFlow, populated only with reviewed source/docs/assets.
-2. One Neon Free project dedicated to BookFlow demo data. A migration role plus restricted runtime role; use nearby regions if available on Free.
-3. One Render Free service, proposed name bookflow-demo, using render.yaml. Public frontend/API share the assigned onrender.com origin; /api/health is the healthcheck. Name/URL availability is unknown.
+1. Private GitHub repository https://github.com/H1r0waz/BookFlow created. Local origin configured; source push awaits GitHub device verification.
+2. Neon Free project bookflow-demo created in AWS Virginia, separate from local development. Both Prisma migrations and the explicit fictional two-business seed completed. A restricted DML runtime role is separate from the migration owner; it cannot create schema objects or modify migration records.
+3. Render workspace Bruno's workspace confirmed by the user. Billing shows Hobby, no card on file and $0 accrued charges. Render service creation is pending source push; the proposed name is bookflow-demo. No application URL is live yet.
 
 ## Required environment / inputs
 
@@ -49,6 +49,8 @@ npm audit remains 4 high / 0 critical / 0 moderate: Nodemailer plus the propagat
 
 ## Approval boundary and future verification
 
-No cloud database migration, seed or deployment has run. Native public-browser tests must follow the actual deployment, including two distinct tenants, full CRUD/booking/calendar/mobile paths, concurrency, idempotency, TLS, cookie persistence and direct route refresh. Local simulated-proxy checks do not count as public HTTPS verification.
+Cloud database migration and seed completed on 2026-10-15. Prisma migrate status reports both migrations applied; Prisma validate passes. The local network cannot reach the provider over IPv6, so the migration process used a resolved IPv4 address with Neon's endpoint routing option and required TLS. This was process-local: no global DNS/hosts changes and no application transport changes. Hosted runtime keeps the pooled provider hostname.
+
+Application deployment and public-browser tests remain pending GitHub device verification/source push. Native public-browser tests must follow the actual deployment, including two distinct tenants, full CRUD/booking/calendar/mobile paths, concurrency, idempotency, TLS, cookie persistence and direct route refresh. Local simulated-proxy checks do not count as public HTTPS verification.
 
 A final PUBLIC_DEPLOYMENT_REPORT.md must contain actual URLs and a deployed commit only after successful provider and browser verification; placeholders must never be presented as live URLs.
