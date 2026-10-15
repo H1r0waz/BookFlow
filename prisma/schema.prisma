@@ -1,0 +1,158 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Business {
+  id           String        @id @default(uuid()) @db.Uuid
+  name         String
+  slug         String        @unique
+  timezone     String        @default("America/New_York")
+  currency     String        @default("USD")
+  users        User[]
+  staff        Staff[]
+  customers    Customer[]
+  services     Service[]
+  appointments Appointment[]
+  audits       AuditLog[]
+}
+
+model User {
+  id           String               @id @default(uuid()) @db.Uuid
+  businessId   String               @db.Uuid
+  business     Business             @relation(fields: [businessId], references: [id])
+  email        String               @unique
+  name         String
+  passwordHash String
+  sessions     Session[]
+  resets       PasswordResetToken[]
+}
+
+model Session {
+  id        String   @id
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  csrf      String
+  expiresAt DateTime @db.Timestamptz(3)
+
+  @@index([expiresAt])
+}
+
+model PasswordResetToken {
+  id        String   @id
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime @db.Timestamptz(3)
+}
+
+model Staff {
+  id           String         @id @default(uuid()) @db.Uuid
+  businessId   String         @db.Uuid
+  business     Business       @relation(fields: [businessId], references: [id])
+  name         String
+  email        String
+  color        String         @default("#7468df")
+  assignments  StaffService[]
+  hours        WorkingHours[]
+  timeOff      TimeOff[]
+  appointments Appointment[]
+
+  @@unique([id, businessId])
+}
+
+model Customer {
+  id           String        @id @default(uuid()) @db.Uuid
+  businessId   String        @db.Uuid
+  business     Business      @relation(fields: [businessId], references: [id])
+  name         String
+  email        String
+  phone        String        @default("")
+  notes        String        @default("")
+  appointments Appointment[]
+
+  @@unique([businessId, email])
+  @@unique([id, businessId])
+}
+
+model Service {
+  id           String         @id @default(uuid()) @db.Uuid
+  businessId   String         @db.Uuid
+  business     Business       @relation(fields: [businessId], references: [id])
+  name         String
+  duration     Int
+  price        Int
+  assignments  StaffService[]
+  appointments Appointment[]
+
+  @@unique([id, businessId])
+}
+
+model StaffService {
+  staffId   String  @db.Uuid
+  serviceId String  @db.Uuid
+  staff     Staff   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([staffId, serviceId])
+}
+
+model WorkingHours {
+  id          String @id @default(uuid()) @db.Uuid
+  staffId     String @db.Uuid
+  staff       Staff  @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  weekday     Int
+  startMinute Int
+  endMinute   Int
+
+  @@unique([staffId, weekday])
+}
+
+model TimeOff {
+  id      String   @id @default(uuid()) @db.Uuid
+  staffId String   @db.Uuid
+  staff   Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  startAt DateTime @db.Timestamptz(3)
+  endAt   DateTime @db.Timestamptz(3)
+  reason  String
+
+  @@index([staffId, startAt])
+}
+
+model Appointment {
+  id          String   @id @default(uuid()) @db.Uuid
+  businessId  String   @db.Uuid
+  business    Business @relation(fields: [businessId], references: [id])
+  staffId     String   @db.Uuid
+  staff       Staff    @relation(fields: [staffId, businessId], references: [id, businessId])
+  serviceId   String   @db.Uuid
+  service     Service  @relation(fields: [serviceId, businessId], references: [id, businessId])
+  customerId  String   @db.Uuid
+  customer    Customer @relation(fields: [customerId, businessId], references: [id, businessId])
+  startAt     DateTime @db.Timestamptz(3)
+  endAt       DateTime @db.Timestamptz(3)
+  status      String   @default("CONFIRMED")
+  price       Int
+  notes       String   @default("")
+  requestKey  String
+  requestHash String
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
+
+  @@unique([businessId, requestKey])
+  @@index([businessId, startAt])
+}
+
+model AuditLog {
+  id            String   @id @default(uuid()) @db.Uuid
+  businessId    String   @db.Uuid
+  business      Business @relation(fields: [businessId], references: [id])
+  appointmentId String   @db.Uuid
+  actor         String
+  action        String
+  createdAt     DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([businessId, createdAt])
+}
