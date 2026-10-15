@@ -2,6 +2,8 @@
 
 Date: October 15, 2026. Status: **Public portfolio demo ready; operational production readiness is not claimed.**
 
+**Dependency remediation candidate (same date):** local full and omit=dev npm audits now report 0 vulnerabilities after reviewed Nodemailer 10.1.1 and scoped deepmerge-ts 8.0.2 updates. Prisma/client remain 6.19.3. Four added security/compatibility tests bring the local suite to 49. The public artifact and public checks below describe the previous release; the corrected candidate has not been redeployed. No real SMTP service was activated. SECURITY_NOTES.md documents the compatibility review and remaining operational limits.
+
 ## Corrected
 
 1. npm start now executes the generated dist-server/index.js artifact.
@@ -19,7 +21,8 @@ Date: October 15, 2026. Status: **Public portfolio demo ready; operational produ
 | Playwright Chromium | 5 journeys passed |
 | Deployment configuration | 10 tests passed |
 | Safe demo seeding | 2 tests passed |
-| Total automated tests | 45 passed; 0 failed |
+| Dependency security/compatibility | 4 tests passed |
+| Total automated tests | 49 passed; 0 failed |
 | TypeScript / ESLint | Passed |
 | Vite frontend / TypeScript backend builds | Passed |
 | npm start / compiled backend health | Passed locally |

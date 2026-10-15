@@ -1,38 +1,35 @@
 # Security and dependency review
 
-Reviewed locally on October 15, 2026. This is a portfolio demonstration, not a security certification.
+Reviewed October 15, 2026. This is a portfolio demonstration, not a security certification.
 
-## Dependency changes
+## Dependency remediation
 
-- Prisma and @prisma/client: 6.19.0 → 6.19.3, kept in sync. The patch updates Effect to 3.21.0, removing its reported context-contamination advisory.
-- Vitest: 3.2.7 → 4.1.11. This was a deliberate test-tool migration after checking Node 24/Vite 7 prerequisites and the official v4 migration guide: https://v4.vitest.dev/guide/migration.html. The existing configuration does not use the removed APIs. All backend, logic and React tests pass. This removes the vulnerable tinypool dependency and fixes the mocker advisory.
-- Removed the three extraneous packages as part of dependency reconciliation. No forced audit fix, application-framework major upgrade, Prisma downgrade or speculative transitive override was applied.
+The previous four high npm audit entries came from two roots: Nodemailer 7.0.13 and deepmerge-ts 7.1.5, propagated through @prisma/config and prisma. The updated local graph resolves both roots to patched releases; no advisory was suppressed or excluded from audit.
 
-## Final npm audit
+- Nodemailer 7.0.13 → **10.1.1**, pinned. This is a deliberate reviewed migration, not npm audit fix --force. BookFlow uses only createTransport(SMTP_URL).sendMail({from,to,subject,text}). Node 24.14.1 and the documented Node 22.12+ minimum satisfy Nodemailer 10's Node 20+ requirement. No caller uses the renamed NoAuth error, fetched content, OAuth, attachments, custom plugins or proxy APIs. Nodemailer 10 includes declarations, so obsolete @types/nodemailer 7 was removed. A loopback SMTP test checks the actual URL-based transport, recovery-shaped message and EHLO command injection.
+- Prisma and @prisma/client stay **6.19.3**. A narrowly scoped npm override replaces only @prisma/config@6.19.3's deepmerge-ts with **8.0.2**. Prisma imports the named deepmerge as c12's configuration merger. v8 changes Map merging, custom metadata types and deepmergeInto mutations; this repository uses none of these features. Tests resolve the dependency from the actual Prisma consumer, exercise recursive/shared graphs and prototype isolation, and load explicit Prisma configuration. Revisit the override when upgrading Prisma; never replace the safe entrypoint with deepmergeFastUnsafe.
+- Earlier work updated Prisma 6.19.0 → 6.19.3 and Vitest 3.2.7 → 4.1.11. This patch introduces no application framework or Prisma major migration.
 
-`npm audit --json` and `npm audit --omit=dev --json` both report **4 high, 0 critical, 0 moderate, 0 low** affected package entries. Exit code 1 is expected while these alerts remain. They are not four independent exploitable application findings.
+Primary references: [Nodemailer changelog](https://github.com/nodemailer/nodemailer/blob/master/CHANGELOG.md), [deepmerge-ts v8 changes/security fix](https://github.com/RebeccaStevens/deepmerge-ts/releases/tag/v8.0.0), [recursive-graph advisory](https://github.com/advisories/GHSA-ggr8-5vv4-36mx), [Nodemailer parser advisory](https://github.com/advisories/GHSA-v53p-9fqp-m79j).
 
-| Entry | Root cause / application exposure | Decision |
-| --- | --- | --- |
-| deepmerge-ts 7.1.5 | Recursive object graph stack exhaustion, GHSA-ggr8-5vv4-36mx. Brought in by Prisma configuration tooling. BookFlow does not pass request payloads into that tool or expose a configuration endpoint. | Retain Prisma 6.19.3; upstream pins deepmerge-ts 7.1.5. Do not force an unverified major override or downgrade Prisma to the registry's proposed 6.12.0. Reassess before public hosting. |
-| @prisma/config 6.19.3 | Propagated alert from deepmerge-ts, not a separate BookFlow endpoint. | Same decision. |
-| prisma 6.19.3 | Propagated alert from @prisma/config. npm's omit=dev graph still includes this peer/tooling chain; do not describe it as absent merely because prisma is declared under devDependencies. | Same decision. |
-| nodemailer 7.0.13 | SMTP injection, parser complexity, file/URL access bypasses and TLS-related advisories listed by npm audit. BookFlow uses a trusted operator-configured SMTP URL, a fixed subject/text body and one Zod-validated email bounded to 254 characters. It does not accept raw messages, attachments, structured recipient arrays, List-* headers, envelope.size, user-controlled transport names or OAuth2 settings. This reduces exposure to several advisories, but does not prove the dependency safe. | Keep SMTP disabled locally; recovery uses the ignored outbox. npm proposes Nodemailer 10.1.1, a multi-major upgrade. Defer a reviewed SMTP migration and delivery tests until separately authorized. Do not publish the real SMTP path as production-ready. |
+## Audit and deployment boundary
 
-Detailed advisories and affected ranges can be regenerated with `npm audit --json`. Relevant root advisories include https://github.com/advisories/GHSA-ggr8-5vv4-36mx and https://github.com/advisories/GHSA-v53p-9fqp-m79j. No exploit against BookFlow was demonstrated, and no claim of zero vulnerabilities is made.
+The updated local dependency graph reports **0 vulnerabilities**. Full and omit=dev audits must both pass before release. This means no known matching npm advisories at verification time; it is not a security certification.
 
-## Application controls verified
+PUBLIC_DEPLOYMENT_REPORT.md records the earlier artifact 30062ca and its four documented alerts. These changes are a separate release candidate; the public service must not be described as patched until that candidate is deployed and checked. Real SMTP remains disabled, with no external provider activated.
 
-Opaque hashed sessions; bcrypt cost 12; HTTP-only/SameSite cookies; exact Origin and session CSRF token checks; server-side Zod validation; tenant-scoped queries; composite tenant foreign keys; PostgreSQL exclusion constraint; staff-row transaction locks; scoped idempotency keys; single-use expiring password reset tokens with session revocation.
+## Regression verification
 
-The mobile logout revokes the server session and returns to sign-in. Historical edits do not bypass checks when a slot actually moves or is reactivated. Cancellation and unchanged retries add no duplicate audit actions.
+tests/dependency-security.test.ts adds four checks: recursive/shared graphs without stack exhaustion, prototype isolation for parsed keys, actual Prisma config loading through the override, and legitimate loopback SMTP delivery plus attempted EHLO command injection. They complement existing recovery/session, configuration, timezone/DST, tenancy, concurrency, public booking and mobile logout tests. TESTING.md records exact counts.
 
-## Secrets and data
+## Application controls
 
-`.env`, `.env.*` except the example, `.local`, node_modules, logs, database files, certificates/private keys, builds and test outputs are ignored. Only synthetic fixture accounts and public demo passwords belong in source. The real local database password must never be copied into documentation or Git.
+Opaque hashed sessions; bcrypt cost 12; HttpOnly/SameSite cookies, Secure in production; exact Origin and session CSRF checks; Zod/input limits; tenant-scoped queries; composite tenant foreign keys; PostgreSQL exclusion constraint; staff-row locks; scoped idempotency; single-use expiring reset tokens with session revocation. These controls are unchanged.
 
-The local PostgreSQL role remains an isolated localhost development superuser. Hosting uses a separate migration owner and restricted DML runtime role; the runtime cannot create schema objects or modify migration history. RLS is not implemented; isolation relies on the API and database relationships. Rate limits are process-local. Public customer identity is not email-verified. Real Render HTTPS, proxy behavior, Secure cookies and logout were verified on October 15, 2026. Real SMTP delivery remains disabled and unverified.
+PASSWORD_RESET_MODE=disabled rejects production forgot/reset before tokens, outbox writes or mail. Local outbox is forbidden in production. SMTP needs explicit configuration and authorization. Loopback tests do not prove real provider delivery, SMTP authentication or provider TLS configuration.
 
-## Public demo preparation
+## Secrets, data and remaining limits
 
-PASSWORD_RESET_MODE=disabled in production rejects forgot/reset before creating tokens, writing outbox files or contacting Nodemailer. Enabling SMTP requires explicit configuration and authorization. Local outbox mode is rejected by production startup. The compiled production-mode smoke uses loopback and simulated proxy headers; separate public checks verified actual HTTPS/cookies/Origin/CSRF and disabled recovery. TRUST_PROXY_HOPS=1 matches the single Render proxy. Seed operations reject unrelated existing tenants and never overwrite accounts/records on repeat. Final full and omit=dev npm audit both report four high, zero critical/moderate/low alerts; none is silently suppressed. Cloud URLs/passwords were checked against 71 reachable historical blobs with no matches, and ignored local credential files are not uploaded. See PUBLIC_DEPLOYMENT_REPORT.md.
+.env, .env.* except the example, .local, node_modules, logs, databases, private keys, builds and test output are ignored. Only fictional fixtures and public demo passwords belong in source; cloud credentials are not committed.
+
+Hosted runtime uses a separate restricted DML role without schema CREATE or migration-history modification. RLS is absent; isolation relies on application scoping and database relationships. Rate limiting is process-local; public customer identity is not email-verified. Shared demo credentials allow edits to fictional records. Free quotas/cold starts, restore drills, monitoring and multi-replica behavior remain operational limits unrelated to the corrected advisories.

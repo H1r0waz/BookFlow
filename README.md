@@ -8,6 +8,8 @@ A responsive appointment and customer management workspace for small service bus
 
 ## Quick start (Windows PowerShell)
 
+**Security update candidate:** the local dependency remediation removes the four npm audit alerts with reviewed Nodemailer 10.1.1 and deepmerge-ts 8.0.2 updates. It retains Prisma 6 and adds four security/compatibility tests (49 total). The public deployment report describes the earlier artifact; publishing this candidate is a separate deployment step. See [SECURITY_NOTES.md](SECURITY_NOTES.md).
+
 Requirements: Node.js 22.12+ and PostgreSQL binaries (`initdb`, `pg_ctl`, `psql`, `createdb`) on PATH.
 
 ```powershell

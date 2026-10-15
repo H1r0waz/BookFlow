@@ -32,7 +32,8 @@ Install Chromium once with `npx playwright install chromium`. API/integration te
 | Deployment configuration (tests/config.test.ts) | 10 | 0 |
 | Transactional/idempotent seed (tests/seed.test.ts) | 2 | 0 |
 | Chromium e2e (tests/browser/journeys.spec.ts) | 5 | 0 |
-| Total | 45 | 0 |
+| Dependency security/compatibility (tests/dependency-security.test.ts) | 4 | 0 |
+| Total | 49 | 0 |
 
 TypeScript, ESLint, Vite frontend build, TypeScript backend build, compiled backend/database health, Prisma generate/validate and both applied migrations pass. `npm start` executes dist-server/index.js. `npm ls --depth=0` reports no missing or extraneous dependencies.
 
@@ -52,7 +53,7 @@ TypeScript, ESLint, Vite frontend build, TypeScript backend build, compiled back
 
 Deployment preparation adds configuration validation, safe demo-seed retry/collision checks, and a compiled production-mode smoke test. The smoke checks shared SPA/API origin, Secure/HttpOnly/SameSite cookies, session/logout, Origin/CSRF rejection and disabled recovery without SMTP. It uses loopback HTTP with simulated proxy metadata: the local smoke itself does not verify cloud HTTPS. Separately, the real Render HTTPS deployment and Neon database were verified on October 15, 2026: 36 API checks and 17 browser checks passed; account billing showed Free/Hobby with no Render card and $0 accrued charges. render.yaml passes validation against the official draft 2020-12 JSON schema; this is not an applied Render Blueprint.
 
-npm audit full and omit=dev return exit code 1: four high entries, zero critical/moderate/low. See SECURITY_NOTES.md for roots, actual inputs, mitigations and deferred major upgrades. Those alerts are not ignored or represented as passing security checks.
+npm audit full and omit=dev on the dependency remediation candidate report zero vulnerabilities. Nodemailer is pinned to 10.1.1 and a scoped override supplies deepmerge-ts 8.0.2 to Prisma configuration tooling, while Prisma/client stay on 6.19.3. Four new tests cover recursive/shared graphs, prototype isolation, actual Prisma config loading and loopback SMTP delivery/EHLO injection. The public verification below belongs to earlier application artifact 30062ca; it does not certify these newer dependencies as deployed. See SECURITY_NOTES.md.
 
 No line-coverage percentage, production load benchmark, multi-replica concurrency, external SMTP delivery or hosted backup/restore is claimed. Autumn offset selection remains a documented UX limitation. The suite protects representative paths; it does not prove every possible tenant/input permutation.
 
